@@ -108,11 +108,14 @@ pipeline {
                     
                     // Run Prisma migration
                     sh '''
-                    # First baseline the existing migrations to avoid conflicts
-                    npx prisma migrate resolve --applied 20241008105335_created_models || echo "Migration resolve step failed"
-                    
-                    # Then apply any new migrations
-                    npx prisma migrate deploy || echo "Migration deploy step failed"
+                    npx prisma migrate resolve --applied 20241008105335_created_models
+                    npx prisma migrate resolve --applied 20241008110923_update_user_table
+                    npx prisma migrate resolve --applied 20241021055013_add_cascading_deletes
+            
+                    # Reset and push the current schema
+                    npx prisma db push --force-reset
+            
+                    echo "Database schema reset and updated successfully"
                     '''
                 }
             }
