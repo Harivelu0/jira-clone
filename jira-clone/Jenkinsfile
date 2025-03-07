@@ -54,8 +54,13 @@ pipeline {
                     echo "DATABASE_URL=$DATABASE_URL" > .env
                     '''
                     
-                    // Run Prisma migration with --force flag to handle non-empty database
-                    sh 'npx prisma migrate deploy --force'
+                    // Run Prisma migration without --force flag (not supported in your version)
+                    sh '''
+                    # First baseline the existing migrations to avoid conflicts
+                    npx prisma migrate resolve --applied 20241008105335_created_models
+                    # Then apply any new migrations
+                    npx prisma migrate deploy
+                    '''
                 }
             }
         }
@@ -73,9 +78,9 @@ pipeline {
                     echo "NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/onboarding" >> .env
                     '''
                     
-                    // Check if Docker is installed before building image
+                    // Fixed Docker check and build
                     sh '''
-                    if command -v docker &> /dev/null; then
+                    if which docker > /dev/null 2>&1; then
                         docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} -t ${DOCKER_IMAGE}:latest .
                     else
                         echo "Docker not installed, skipping Docker build"
@@ -101,9 +106,9 @@ pipeline {
         
         stage('Push Docker Image') {
             steps {
-                // Check if Docker is installed before pushing
+                // Fixed Docker check and push
                 sh '''
-                if command -v docker &> /dev/null; then
+                if which docker > /dev/null 2>&1; then
                     echo $DOCKER_CREDENTIALS_PSW | docker login $DOCKER_REGISTRY -u $DOCKER_CREDENTIALS_USR --password-stdin
                     docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
                     docker push ${DOCKER_IMAGE}:latest
@@ -180,12 +185,11 @@ pipeline {
     
     post {
         always {
-            // Run on any available agent
             node(null) {
                 echo "Cleaning up..."
-                // Check if Docker exists before running Docker commands
+                // Fixed Docker check and cleanup
                 sh '''
-                if command -v docker &> /dev/null; then
+                if which docker > /dev/null 2>&1; then
                     docker rmi ${DOCKER_IMAGE}:${DOCKER_TAG} || true
                     docker rmi ${DOCKER_IMAGE}:latest || true
                 else
@@ -195,7 +199,6 @@ pipeline {
             }
         }
         success {
-            // Run on any available agent
             node(null) {
                 echo "Build succeeded! Sending notifications..."
                 // Send success notifications
@@ -203,7 +206,6 @@ pipeline {
             }
         }
         failure {
-            // Run on any available agent
             node(null) {
                 echo "Build failed! Sending notifications..."
                 // Send failure notifications
