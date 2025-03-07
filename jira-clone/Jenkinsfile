@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        nodejs 'Node18'  // Use the name you configured
+        nodejs 'NodeJS'  // Use the name you configured
     }
     // Define variables used in the pipeline
     environment {
