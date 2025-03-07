@@ -11,8 +11,8 @@ pipeline {
         DOCKER_TAG = "${env.BUILD_NUMBER}"
         // Reference credentials stored in Jenkins
         DATABASE_URL = credentials('DATABASE_URL_CREDENTIAL')
-        CLERK_SECRET_KEY = credentials('CLERK_SECRET_KEY_CREDENTIAL')
-        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = credentials('NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY_CREDENTIAL')
+        CLERK_SECRET_KEY = credentials('CLERK_SECRET_KEY')
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = credentials('NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY')
         // Docker credentials
         DOCKER_CREDENTIALS = credentials('DOCKER_CREDENTIALS')
     }
