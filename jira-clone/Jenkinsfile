@@ -180,7 +180,8 @@ pipeline {
     
     post {
         always {
-            node {
+            // Run on any available agent
+            node(null) {
                 echo "Cleaning up..."
                 // Check if Docker exists before running Docker commands
                 sh '''
@@ -194,14 +195,16 @@ pipeline {
             }
         }
         success {
-            node {
+            // Run on any available agent
+            node(null) {
                 echo "Build succeeded! Sending notifications..."
                 // Send success notifications
                 // slackSend channel: '#builds', color: 'good', message: "Build Succeeded: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
             }
         }
         failure {
-            node {
+            // Run on any available agent
+            node(null) {
                 echo "Build failed! Sending notifications..."
                 // Send failure notifications
                 // slackSend channel: '#builds', color: 'danger', message: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
