@@ -35,23 +35,12 @@ pipeline {
             }
         }
         
-        stage('Install Dependencies') {
-            steps {
-                // Change to the jira-clone directory and install dependencies
-                dir('jira-clone') {
-                    sh 'npm i'
-                }
-            }
-        }
-        
-        stage('Lint') {
-            steps {
-                dir('jira-clone') {
-                    // Run ESLint
-                    sh 'npm run lint || true' // Adding || true to prevent pipeline failure if lint has warnings
-                }
-            }
-        }
+         steps {
+    tool 'NodeJS'
+    withEnv(["PATH+NODE=${tool 'NodeJS'}/bin"]) {
+      // No need to change directory since we're already in jira-clone
+      sh 'npm i'
+    }
         
         stage('Database Migration') {
             steps {
