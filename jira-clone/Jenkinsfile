@@ -35,13 +35,17 @@ pipeline {
             }
         }
         
-         steps {
-    tool 'NodeJS'
-    withEnv(["PATH+NODE=${tool 'NodeJS'}/bin"]) {
-      // No need to change directory since we're already in jira-clone
-      sh 'npm i'
-    }
-        
+        stage('Install Dependencies') {
+            steps {
+                tool 'NodeJS'
+                withEnv(["PATH+NODE=${tool 'NodeJS'}/bin"]) {
+                    dir('jira-clone') {  // Add directory change to be consistent
+                        sh 'npm i'
+                    }
+                }
+            }
+        }
+      
         stage('Database Migration') {
             steps {
                 dir('jira-clone') {
