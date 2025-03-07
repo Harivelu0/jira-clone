@@ -75,7 +75,7 @@ pipeline {
                     
                     async function testConnection() {
                       try {
-                        const result = await prisma.$queryRaw\`SELECT 1 as test\`;
+                        const result = await prisma.$queryRaw`SELECT 1 as test\`;
                         console.log('Connection successful:', result);
                         return true;
                       } catch (error) {
