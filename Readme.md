@@ -1,3 +1,5 @@
+![blogggine drawio](https://github.com/user-attachments/assets/0ebd00bb-6e6f-42dd-a9c7-40c07c995645)
+
 # Jenkins with Docker Setup Guide
 
 This guide walks through setting up Jenkins in a Docker container with the ability to build Docker images.
@@ -20,6 +22,7 @@ On the host machine, update the Docker socket permissions:
 ```bash
 sudo chmod 666 /var/run/docker.sock
 ```
+
 
 ## 3. Get Jenkins Admin Password
 
