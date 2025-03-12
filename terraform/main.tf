@@ -2,7 +2,7 @@
 data "aws_availability_zones" "available" {
   state = "available"
 }
-
+#modules
 module "networking" {
   source = "./modules/networking"
 
